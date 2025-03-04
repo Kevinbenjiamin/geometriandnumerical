@@ -2,6 +2,10 @@
 create by kevinzzx on 2025.3.1
 */
 
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
+
+
 #include<iostream>
 #include <vector>
 #include <cmath>
@@ -120,3 +124,65 @@ struct Segment{
     Point direction;
 };
 
+
+//定义折线
+struct Polyline{
+    
+    Polyline()=default;
+
+    Polyline(const std::vector<Point>& pts):points(pts){
+        for(int i=0;i<points.size();i++){
+            segs.push_back(Segment(points[i-1],points[i]));
+        }
+    }
+    Polyline(const std::vector<Segment>& segs_): segs(segs_){
+        for(int i = 0;i<segs.size();++i){
+            points.push_back(segs[i].start);
+        }
+        points.push_back(segs[segs.size()-1].end);
+    }
+
+    void append(const Segment& seg) {
+        if(!segs.empty() && segs.back().end != seg.start) {
+            throw std::invalid_argument("Disconnected Segment");
+        }
+        segs.push_back(seg);
+        points.push_back(seg.end);
+    }
+    void append(const Point& p) {
+        const auto seg = Segment(points.back(),p);
+        points.push_back(p);
+        segs.push_back(seg);
+    }
+
+    Polyline operator+(const Polyline& other) const {
+        Polyline result;
+        result.segs = this->segs;
+        result.points = this->points;
+        for(auto& seg : other.segs) {
+            result.append(seg);
+        }
+
+        return result;
+    }
+
+    Segment GetSegmentByIndex(int index) {
+        if(index < 0 || index >= segs.size()) {
+            throw std::out_of_range("Index out of range");
+        }
+        return segs[index];
+    }
+    std::vector<Point> Points() const{
+        return points;
+    }
+    std::vector<Segment> Segments()const{
+        return segs;
+    }
+private:
+    std::vector<Segment> segs;
+    std::vector<Point> points;
+
+};
+
+
+#endif // GEOMETRY_H
