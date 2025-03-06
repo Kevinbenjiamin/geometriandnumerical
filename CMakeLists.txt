@@ -15,3 +15,4 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 add_subdirectory(geo_cal)
+add_subdirectory(funczero)

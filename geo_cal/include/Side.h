@@ -6,6 +6,7 @@
 #include "Geometry.h"
 #include "utils.h"
 #include <cassert>
+#include <stdexcept>
 
 
 enum class Side{
@@ -47,6 +48,32 @@ Side GetSide(const Point& p,const Segment& s){
         return Side::DEFAULT_NO_SIDE;
     }
 }
+
+// Determine which side of two segments the point is.
+// Method 2: through the side of p to one segment to determine, and except left/right side, we also provide other options.
+Side GetSide(const Point &p, const Segment &s1, const Segment &s2){
+    //判断是否线段相连
+    if(s1.end!=s2.start){
+        throw std::runtime_error("Error:the two segments are not connect.");
+    }
+    const auto side_1 = GetSide(p,s1);
+    const auto side_2 = GetSide(p,s1);
+    if(side_1==side_2){
+        return side_1;
+    }
+    if(side_1==Side::WITHIN || side_2==Side::WITHIN){
+        return Side::WITHIN;
+    }
+    //工程方法，通过向量间叉乘判断是在左边还是右边
+    const auto &p0p = p-s1.start;
+    const auto &p1p = p-s2.start;
+    const auto c1 = CrossProduct(s1.direction, p0p);
+    const auto c2 = CrossProduct(s2.direction, p1p);
+    return std::abs(c2)>std::abs(c1)?side_2:side_1;
+
+
+}
+
 
 
 #endif // SIDE_H

@@ -14,7 +14,7 @@ double ComputeProjectionLength(const Point& p, const Segment& segment){
 }
 
 //计算点到线段的投影点
-Point computeProjection(const Point& p, const Segment& segment){
+Point ComputeProjection(const Point& p, const Segment& segment){
     double projection_length = ComputeProjectionLength(p, segment);
     return segment.start + segment.unit_direction()*projection_length;
 }
