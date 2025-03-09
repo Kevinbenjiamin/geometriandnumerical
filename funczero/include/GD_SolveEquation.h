@@ -26,7 +26,7 @@ double gd_loss_func_prime(double a,double b,double c,double x){
 
 double GradientDescent(double a,double b,double c,double x0,double leaningrate){
     double x = x0;
-    while(abs(gd_loss_func(a, b, c, x))>GD_EPS){
+    while(fabs(gd_loss_func(a, b, c, x))>GD_EPS){
         x = x - leaningrate*gd_loss_func_prime(a, b, c, x);
     }
     return x;
