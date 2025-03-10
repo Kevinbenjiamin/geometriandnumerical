@@ -16,3 +16,4 @@ include(CPack)
 
 add_subdirectory(geo_cal)
 add_subdirectory(funczero)
+add_subdirectory(optimization) 
